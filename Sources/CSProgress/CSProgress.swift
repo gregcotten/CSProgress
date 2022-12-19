@@ -795,8 +795,8 @@ public final class CSProgress: CustomDebugStringConvertible {
         }
     }
     
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
     // If Objective-C compatibility is not needed, uncomment the following line and delete everything below it.
-    // private typealias Backing = SwiftBacking
     
     // MARK: Objective-C Compatibility Crud
     // Note: Everything below this point exists for Objective-C interoperability. If Objective-C compatibility is not important, feel free to delete everything below.
@@ -1328,7 +1328,13 @@ public final class CSProgress: CustomDebugStringConvertible {
             return CSProgress(wrappedNSProgress: ns, parent: nil, pendingUnitCount: 0, granularity: granularity, queue: queue)
         }
     }
+
+    #else
+    private typealias Backing = SwiftBacking
+    #endif
 }
+
+#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 
 extension CSProgress: _ObjectiveCBridgeable {
     public typealias _ObjectiveCType = Foundation.Progress
@@ -1350,3 +1356,5 @@ extension CSProgress: _ObjectiveCBridgeable {
         return self.bridge(from: ns!)
     }
 }
+
+#endif
