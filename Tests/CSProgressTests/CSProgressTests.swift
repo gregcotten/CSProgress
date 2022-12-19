@@ -260,55 +260,6 @@ class CSProgressTests: XCTestCase {
     }
     
     @available(macOS 10.12, *)
-    func testCSProgressesBackedByNSProgresses() {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        
-        let granularity = CSProgressTests.granularity
-        
-        let masterCount = Int64(arc4random())
-        let subACount = Int64(arc4random())
-        let subBCount = Int64(arc4random())
-        let subCCount = Int64(arc4random())
-        let subDCount = Int64(arc4random())
-        
-        let subAPortion = Int64(arc4random_uniform(UInt32(masterCount / 4)))
-        let subBPortion = Int64(arc4random_uniform(UInt32(masterCount / 4)))
-        let subCPortion = Int64(arc4random_uniform(UInt32(masterCount / 4)))
-        let subDPortion = Int64(arc4random_uniform(UInt32(masterCount / 4)))
-     
-        let masterProgress = CSProgress.bridge(from: Foundation.Progress.discreteProgress(totalUnitCount: masterCount), granularity: granularity, queue: queue)
-        
-        let subProgressA = CSProgress.bridge(from: Foundation.Progress.discreteProgress(totalUnitCount: subACount), granularity: granularity, queue: queue)
-        masterProgress.addChild(subProgressA, withPendingUnitCount: subAPortion)
-        
-        let subProgressB = CSProgress.bridge(from: Foundation.Progress.discreteProgress(totalUnitCount: subBCount), granularity: granularity, queue: queue)
-        masterProgress.addChild(subProgressB, withPendingUnitCount: subBPortion)
-        
-        let subProgressC = CSProgress.bridge(from: Foundation.Progress.discreteProgress(totalUnitCount: subCCount), granularity: granularity, queue: queue)
-        masterProgress.addChild(subProgressC, withPendingUnitCount: subCPortion)
-        
-        let subProgressD = CSProgress.bridge(from: Foundation.Progress .discreteProgress(totalUnitCount: subDCount), granularity: granularity, queue: queue)
-        masterProgress.addChild(subProgressD, withPendingUnitCount: subDPortion)
-        
-        let masterNSProgress = Foundation.Progress.discreteProgress(totalUnitCount: masterCount)
-        let subNSProgressA = Foundation.Progress(totalUnitCount: subACount, parent: masterNSProgress, pendingUnitCount: subAPortion)
-        let subNSProgressB = Foundation.Progress(totalUnitCount: subBCount, parent: masterNSProgress, pendingUnitCount: subBPortion)
-        let subNSProgressC = Foundation.Progress(totalUnitCount: subCCount, parent: masterNSProgress, pendingUnitCount: subCPortion)
-        let subNSProgressD = Foundation.Progress(totalUnitCount: subDCount, parent: masterNSProgress, pendingUnitCount: subDPortion)
-        
-        let masterProgressPair = ProgressPair(progress: masterProgress, nsProgress: masterNSProgress, nonPendingUnitCount: masterCount - subAPortion - subBPortion - subCPortion - subDPortion)
-        let childProgressPairs = [
-            ProgressPair(progress: subProgressA, nsProgress: subNSProgressA, nonPendingUnitCount: subACount),
-            ProgressPair(progress: subProgressB, nsProgress: subNSProgressB, nonPendingUnitCount: subBCount),
-            ProgressPair(progress: subProgressC, nsProgress: subNSProgressC, nonPendingUnitCount: subCCount),
-            ProgressPair(progress: subProgressD, nsProgress: subNSProgressD, nonPendingUnitCount: subDCount)
-        ]
-        
-        self.testCSProgresses(masterProgress: masterProgressPair, childProgresses: childProgressPairs, queue: queue)
-    }
-    
-    @available(macOS 10.12, *)
     func testNSProgressesBackedByCSProgresses() {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
