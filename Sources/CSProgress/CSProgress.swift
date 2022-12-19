@@ -713,6 +713,12 @@ public final class CSProgress: CustomDebugStringConvertible {
      This parameter defaults to the main operation queue.
      */
     public convenience init<Count: BinaryInteger>(totalUnitCount: Count, granularity: Double = CSProgress.defaultGranularity, queue: OperationQueue = .main) {
+        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+        let allowBridge = true
+        #else
+        let allowBridge = false
+        #endif
+
         if let parentRef = CSProgress._current {
             let parent = parentRef.progress
             let pendingUnitCount = parentRef.pendingUnitCount
@@ -721,14 +727,19 @@ public final class CSProgress: CustomDebugStringConvertible {
             
             // Prevent double-attaching
             parent.resignCurrent()
-        } else if Foundation.Progress.current() != nil {
+        } else if allowBridge, Foundation.Progress.current() != nil {
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             // We have no way of knowing the current progress's pending unit count, so put a shim in between it and us
             let shim = Foundation.Progress(totalUnitCount: 1)
             
             let parent = CSProgress.bridge(from: shim, queue: queue)
             
             self.init(totalUnitCount: totalUnitCount, parent: parent, pendingUnitCount: 1, granularity: granularity)
-        } else {
+            #else
+            fatalError("You shouldn't get here")
+            #endif
+        }
+        else {
             self.init(totalUnitCount: totalUnitCount, parent: nil, pendingUnitCount: 0, granularity: granularity)
         }
     }
