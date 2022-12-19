@@ -758,8 +758,10 @@ public final class CSProgress: CustomDebugStringConvertible {
                 self.addChild(wrapper, withPendingUnitCount: unitCount)
                 
                 return ns
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case .objectiveC:
                 return self.bridgeToNSProgress()
+            #endif
             }
         }()
         
@@ -789,13 +791,14 @@ public final class CSProgress: CustomDebugStringConvertible {
                         self.backing.removeChild(bridgedNS)
                     }
                 }
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case .objectiveC:
                 self.bridgeToNSProgress().resignCurrent()
+            #endif
             }
         }
     }
-    
-    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+
     // If Objective-C compatibility is not needed, uncomment the following line and delete everything below it.
     
     // MARK: Objective-C Compatibility Crud
@@ -808,14 +811,18 @@ public final class CSProgress: CustomDebugStringConvertible {
         // All calls to methods on the backing should be protected by the progress's semaphore.
         
         case swift(SwiftBacking)
+        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         case objectiveC(ObjectiveCBacking)
+        #endif
         
         var totalUnitCount: UnitCount {
             switch self {
             case let .swift(backing):
                 return backing.totalUnitCount
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.totalUnitCount
+            #endif
             }
         }
         
@@ -823,8 +830,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.completedUnitCount
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.completedUnitCount
+            #endif
             }
         }
         
@@ -832,8 +841,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.fractionCompleted
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.fractionCompleted
+            #endif
             }
         }
         
@@ -841,8 +852,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.isCompleted
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.isCompleted
+            #endif
             }
         }
         
@@ -850,8 +863,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.localizedDescription
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.localizedDescription
+            #endif
             }
         }
         
@@ -859,8 +874,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.localizedAdditionalDescription
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.localizedAdditionalDescription
+            #endif
             }
         }
         
@@ -868,8 +885,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.isIndeterminate
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.isIndeterminate
+            #endif
             }
         }
         
@@ -877,8 +896,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.isCancelled
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.isCancelled
+            #endif
             }
         }
         
@@ -893,8 +914,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 backing.set(totalUnitCount: totalUnitCount, completedUnitCount: completedUnitCount, setupHandler: setupHandler, completionHandler: completionHandler)
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 backing.set(totalUnitCount: totalUnitCount, completedUnitCount: completedUnitCount, setupHandler: setupHandler, completionHandler: completionHandler)
+            #endif
             }
         }
         
@@ -907,8 +930,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 backing.set(localizedDescription: localizedDescription, localizedAdditionalDescription: localizedAdditionalDescription, cancel: cancel, setupHandler: setupHandler, completionHandler: completionHandler)
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 backing.set(localizedDescription: localizedDescription, localizedAdditionalDescription: localizedAdditionalDescription, cancel: cancel, setupHandler: setupHandler, completionHandler: completionHandler)
+            #endif
             }
         }
         
@@ -916,8 +941,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.children
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.children
+            #endif
             }
         }
         
@@ -925,8 +952,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 backing.addChild(child, pendingUnitCount: pendingUnitCount)
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 backing.addChild(child, pendingUnitCount: pendingUnitCount)
+            #endif
             }
         }
         
@@ -934,8 +963,10 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 backing.removeChild(child)
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 backing.removeChild(child)
+            #endif
             }
         }
         
@@ -943,12 +974,14 @@ public final class CSProgress: CustomDebugStringConvertible {
             switch self {
             case let .swift(backing):
                 return backing.debugDescriptionSuffix
+            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case let .objectiveC(backing):
                 return backing.debugDescriptionSuffix
+            #endif
             }
         }
     }
-    
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
     // The backing for a CSProgress wrapping an NSProgress.
     private final class ObjectiveCBacking: NSObject {
         let progress: Foundation.Progress
@@ -1328,9 +1361,6 @@ public final class CSProgress: CustomDebugStringConvertible {
             return CSProgress(wrappedNSProgress: ns, parent: nil, pendingUnitCount: 0, granularity: granularity, queue: queue)
         }
     }
-
-    #else
-    private typealias Backing = SwiftBacking
     #endif
 }
 
