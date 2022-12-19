@@ -733,6 +733,7 @@ public final class CSProgress: CustomDebugStringConvertible {
         }
     }
     
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
     /**
      Sets the receiver as the current progress object of the current thread and specifies the portion of work to be performed by the next child progress object of the receiver.
      Also sets its bridged NSProgress as the current NSProgress, with the same pending unit count.
@@ -758,16 +759,14 @@ public final class CSProgress: CustomDebugStringConvertible {
                 self.addChild(wrapper, withPendingUnitCount: unitCount)
                 
                 return ns
-            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case .objectiveC:
                 return self.bridgeToNSProgress()
-            #endif
             }
         }()
         
         ns.becomeCurrent(withPendingUnitCount: Int64(unitCount))
     }
-    
+
     /**
      Balance the most recent previous invocation of becomeCurrent(withPendingUnitCount:) on the same thread by restoring the current progress object to what it was before becomeCurrent(withPendingUnitCount:) was invoked.
      Also invokes resignCurrent() on its bridged NSProgress object.
@@ -791,13 +790,12 @@ public final class CSProgress: CustomDebugStringConvertible {
                         self.backing.removeChild(bridgedNS)
                     }
                 }
-            #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             case .objectiveC:
                 self.bridgeToNSProgress().resignCurrent()
-            #endif
             }
         }
     }
+    #endif
 
     // If Objective-C compatibility is not needed, uncomment the following line and delete everything below it.
     
