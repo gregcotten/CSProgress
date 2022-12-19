@@ -732,8 +732,7 @@ public final class CSProgress: CustomDebugStringConvertible {
             self.init(totalUnitCount: totalUnitCount, parent: nil, pendingUnitCount: 0, granularity: granularity)
         }
     }
-    
-    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+
     /**
      Sets the receiver as the current progress object of the current thread and specifies the portion of work to be performed by the next child progress object of the receiver.
      Also sets its bridged NSProgress as the current NSProgress, with the same pending unit count.
@@ -749,7 +748,8 @@ public final class CSProgress: CustomDebugStringConvertible {
      */
     public func becomeCurrent<Count: BinaryInteger>(withPendingUnitCount unitCount: Count, queue: OperationQueue = .main) {
         CSProgress._current = ParentReference(progress: self, pendingUnitCount: UnitCount(unitCount))
-        
+
+        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         let ns: Foundation.Progress = {
             switch self.backing {
             case .swift:
@@ -765,6 +765,7 @@ public final class CSProgress: CustomDebugStringConvertible {
         }()
         
         ns.becomeCurrent(withPendingUnitCount: Int64(unitCount))
+        #endif
     }
 
     /**
@@ -776,7 +777,8 @@ public final class CSProgress: CustomDebugStringConvertible {
         if CSProgress.current() === self {
             CSProgress._current = nil
         }
-        
+
+        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         if let currentNS = Foundation.Progress.current() {
             switch self.backing {
             case let .swift(backing):
@@ -794,8 +796,8 @@ public final class CSProgress: CustomDebugStringConvertible {
                 self.bridgeToNSProgress().resignCurrent()
             }
         }
+        #endif
     }
-    #endif
 
     // If Objective-C compatibility is not needed, uncomment the following line and delete everything below it.
     
