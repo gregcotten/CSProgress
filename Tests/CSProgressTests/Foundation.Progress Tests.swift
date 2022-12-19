@@ -9,6 +9,7 @@
 //
 // Changes have been made to use `CSProgress` instead of `Progress`, and to reflect intentional design differences from
 // the original.
+#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 
 import XCTest
 import Dispatch
@@ -379,3 +380,5 @@ class TestProgress : XCTestCase {
         XCTAssertEqual(.success, childSema.wait(timeout: .now() + .seconds(3)))
     }
 }
+
+#endif

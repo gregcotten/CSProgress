@@ -4,6 +4,7 @@
 //  Created by Charles Srstka on 1/22/17.
 //  Copyright © 2017-2022 Charles Srstka. All rights reserved.
 //
+#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 
 import Foundation
 import CSProgress
@@ -218,3 +219,4 @@ private func TimeCSProgressesRootedWithObservingNSProgress() {
     
     _ = watcher.self
 }
+#endif

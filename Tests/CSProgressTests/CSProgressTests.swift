@@ -5,6 +5,7 @@
 //  Created by Charles Srstka on 1/13/17.
 //  Copyright © 2017-2022 Charles Srstka. All rights reserved.
 //
+#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 
 import XCTest
 @testable import CSProgress
@@ -565,3 +566,5 @@ extension Collection {
         return zip(self, indexes).sorted { $0.1 > $1.1 }.map { $0.0 }
     }
 }
+
+#endif
